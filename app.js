@@ -7,9 +7,11 @@ const {studentModal}=require("./modules/students");
 app.use(express.json());
 const mongoose=require("mongoose");
 const bcrypt = require('bcrypt');
+const cookieParser=require("cookie-parser");
+const cookie=require("./middleware/basicCookies")
 
 
-
+ app.use(cookieParser());
 async function xyz() {
     try {
         await connectDB();
@@ -53,7 +55,8 @@ app.post("/signup",async (req,res)=>{
     }
     //  console.log(data)
     const passwordHash= await bcrypt.hash(pasword,10);
-    console.log(passwordHash);
+
+    // console.log(passwordHash);
     const student=new studentModal({
         emailId,
         pasword:passwordHash,
@@ -65,6 +68,7 @@ app.post("/signup",async (req,res)=>{
         
     });
     await student.save();
+    
 
     res.send("user added");
    }catch(err){
@@ -72,12 +76,12 @@ app.post("/signup",async (req,res)=>{
    }
 
 })
-app.get("/profile",async (req,res)=>{
+app.get("/profile",cookie,async (req,res)=>{
    try{
-
+    
     const email=req.body.emailId;
     const user=await studentModal.find({emailId:email});
-    console.log(user[0].emailId);
+    // console.log(user[0].emailId);
     if(user[0].emailId!=email){
         throw new Error("user not found");
     }
@@ -87,7 +91,7 @@ app.get("/profile",async (req,res)=>{
 }
 
 })
-app.delete("/profile",async (req,res)=>{
+app.delete("/profile",cookie,async (req,res)=>{
 try{
     const id=req.body._id;
     if(!id){
@@ -100,8 +104,9 @@ res.send("user deleted successful");
 }
 
 })
-app.patch("/profile",async(req,res)=>{
+app.patch("/profile",cookie,async(req,res)=>{
  try{
+    
     const data=req.body._id;
     const email=req.body.emailId;
     const{firstName,lastName,pasword,age,gender}=req.body;
@@ -141,6 +146,9 @@ app.post("/login",async (req,res)=>{
         if(!checkPass){
             throw new Error("invalid password")
         }
+        const token="fukentokenlife";
+        res.cookie("token",token);   //cookie should be sent at athe time of login not inteh time of signup .Remember.
+
         res.send("login sucessfull");
             
         
