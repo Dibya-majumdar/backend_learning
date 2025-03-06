@@ -45,12 +45,19 @@ app.get("/admin/hader",validate,(req,res)=>{
 
 })
 app.post("/dibya",async (req,res)=>{
-    const data=req.body;
+   try{ 
+    const {emailId,pasword,firstName}=req.body;
+    if(emailId==null && pasword==null && firstName==null){
+        throw new Error("All fields are required");
+    }
     //  console.log(data)
     const student=new studentModal(req.body);
     await student.save();
 
-    res.send("user added")
+    res.send("user added");
+   }catch(err){
+    res.send("error"+err)
+   }
 
 })
 app.get("/dibya",async (req,res)=>{
@@ -84,6 +91,17 @@ res.send("user deleted successful");
 app.patch("/dibya",async(req,res)=>{
  try{
     const data=req.body._id;
+    const email=req.body.emailId;
+    console.log(email);
+    const finStu= await studentModal.find({_id:data});
+    console.log(finStu);
+    if(email!=finStu[0].emailId){
+        console.log(finStu[0].emailId);
+        throw new Error("cant update email");
+    }
+    if(finStu==null){
+        throw new Error("sudent does not exist");
+    }
     const studata=req.body;
     const user=await studentModal.findByIdAndUpdate({_id:data},studata);
     res.send("updated successfully");

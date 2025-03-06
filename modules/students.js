@@ -2,16 +2,21 @@ const mongoose=require("mongoose");
 
 const studentSchema=new mongoose.Schema({
  firstName:{
-    type:String
+    type:String,
+    required:true
  },
  lastName:{
     type:String
  },
  emailId:{
-    type:String
+    type:String,
+    required:true,
+    unique:true,
+    trim:true
  },
  pasword:{
-    type:Number
+    type:Number,
+    required:true
  },
  age:{
     type:Number
@@ -19,7 +24,7 @@ const studentSchema=new mongoose.Schema({
  gender:{
     type:String
  }
-});
+},{timestamps:true});
 
 //code for mongoosemodel
 const studentModal=mongoose.model("Student",studentSchema);
