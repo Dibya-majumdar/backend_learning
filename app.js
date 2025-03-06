@@ -6,6 +6,7 @@ const {connectDB}=require("./config/database");
 const {studentModal}=require("./modules/students");
 app.use(express.json());
 const mongoose=require("mongoose");
+const bcrypt = require('bcrypt');
 
 
 
@@ -44,14 +45,25 @@ app.get("/admin/hader",validate,(req,res)=>{
    
 
 })
-app.post("/dibya",async (req,res)=>{
+app.post("/signup",async (req,res)=>{
    try{ 
-    const {emailId,pasword,firstName}=req.body;
+    const {emailId,pasword,firstName,lastName,age,gender}=req.body;
     if(emailId==null && pasword==null && firstName==null){
         throw new Error("All fields are required");
     }
     //  console.log(data)
-    const student=new studentModal(req.body);
+    const passwordHash= await bcrypt.hash(pasword,10);
+    console.log(passwordHash);
+    const student=new studentModal({
+        emailId,
+        pasword:passwordHash,
+        firstName,
+        lastName,
+        age,
+        gender
+
+        
+    });
     await student.save();
 
     res.send("user added");
@@ -60,7 +72,7 @@ app.post("/dibya",async (req,res)=>{
    }
 
 })
-app.get("/dibya",async (req,res)=>{
+app.get("/profile",async (req,res)=>{
    try{
 
     const email=req.body.emailId;
@@ -75,7 +87,7 @@ app.get("/dibya",async (req,res)=>{
 }
 
 })
-app.delete("/dibya",async (req,res)=>{
+app.delete("/profile",async (req,res)=>{
 try{
     const id=req.body._id;
     if(!id){
@@ -88,21 +100,23 @@ res.send("user deleted successful");
 }
 
 })
-app.patch("/dibya",async(req,res)=>{
+app.patch("/profile",async(req,res)=>{
  try{
     const data=req.body._id;
     const email=req.body.emailId;
-    console.log(email);
-    const finStu= await studentModal.find({_id:data});
-    console.log(finStu);
-    if(email!=finStu[0].emailId){
-        console.log(finStu[0].emailId);
-        throw new Error("cant update email");
+    const{firstName,lastName,pasword,age,gender}=req.body;
+    // console.log(email);
+    if(email!=undefined){
+        throw new Error("can not update email")
     }
+    const finStu= await studentModal.find({_id:data});
+   
     if(finStu==null){
         throw new Error("sudent does not exist");
     }
-    const studata=req.body;
+   const passwordHash= await bcrypt.hash(pasword,10);
+
+    const studata={firstName,lastName,age,gender,pasword:passwordHash};
     const user=await studentModal.findByIdAndUpdate({_id:data},studata);
     res.send("updated successfully");
     }catch(err){
@@ -110,3 +124,30 @@ app.patch("/dibya",async(req,res)=>{
     }
 
 })
+
+app.post("/login",async (req,res)=>{
+    try{
+        const {emailId,pasword}=req.body;
+        if(emailId==null && pasword==null){
+            throw new Error("pls enter email and password");
+
+        }
+        const ispresent=await studentModal.findOne({emailId:emailId});
+        console.log(ispresent);
+        if(!ispresent){
+            throw new Error("pls signup first");
+        }
+        const checkPass=await bcrypt.compare(pasword,ispresent.pasword);//it returns true or false
+        if(!checkPass){
+            throw new Error("invalid password")
+        }
+        res.send("login sucessfull");
+            
+        
+    }catch(err){
+        res.send("Error occured at login "+err);
+    }
+   
+
+
+});

@@ -15,7 +15,7 @@ const studentSchema=new mongoose.Schema({
     trim:true
  },
  pasword:{
-    type:Number,
+    type:String,
     required:true
  },
  age:{
