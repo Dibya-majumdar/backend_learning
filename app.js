@@ -8,7 +8,8 @@ app.use(express.json());
 const mongoose=require("mongoose");
 const bcrypt = require('bcrypt');
 const cookieParser=require("cookie-parser");
-const cookie=require("./middleware/basicCookies")
+const cookie=require("./middleware/basicCookies");
+const jwt=require("jsonwebtoken");
 
 
  app.use(cookieParser());
@@ -133,6 +134,7 @@ app.patch("/profile",cookie,async(req,res)=>{
 app.post("/login",async (req,res)=>{
     try{
         const {emailId,pasword}=req.body;
+      
         if(emailId==null && pasword==null){
             throw new Error("pls enter email and password");
 
@@ -146,8 +148,11 @@ app.post("/login",async (req,res)=>{
         if(!checkPass){
             throw new Error("invalid password")
         }
+//write the logic of token here 
+const token1=await jwt.sign({_id:ispresent.id},"passOfDibya")
+
         const token="fukentokenlife";
-        res.cookie("token",token);   //cookie should be sent at athe time of login not inteh time of signup .Remember.
+        res.cookie("token",token1);   //cookie should be sent at athe time of login not inteh time of signup .Remember.
 
         res.send("login sucessfull");
             
