@@ -1,15 +1,17 @@
 const { error } = require("console");
-const {validate}=require("./middleware/admin")
+
 const express=require("express");
 const app=express();
 const {connectDB}=require("./config/database");
 const {studentModal}=require("./modules/students");
 app.use(express.json());
 const mongoose=require("mongoose");
-const bcrypt = require('bcrypt');
+
 const cookieParser=require("cookie-parser");
-const cookie=require("./middleware/basicCookies");
+const userAuth=require("./middleware/userAuth");
 const jwt=require("jsonwebtoken");
+const {authRouter}=require("./Routers/authRouter");
+const {profileRouter}=require("./Routers/profileRouter")
 
 
  app.use(cookieParser());
@@ -38,61 +40,11 @@ xyz();
 
 
 
-app.get("/admin/profile",validate,(req,res)=>{
-   
-   res.send("admin ,its your profile");
 
-})
-app.get("/admin/hader",validate,(req,res)=>{
-   res.send("validate the admin");
-   
+app.use("/",authRouter);
+app.use("/",profileRouter);
 
-})
-app.post("/signup",async (req,res)=>{
-   try{ 
-    const {emailId,pasword,firstName,lastName,age,gender}=req.body;
-    if(emailId==null && pasword==null && firstName==null){
-        throw new Error("All fields are required");
-    }
-    //  console.log(data)
-    const passwordHash= await bcrypt.hash(pasword,10);
-
-    // console.log(passwordHash);
-    const student=new studentModal({
-        emailId,
-        pasword:passwordHash,
-        firstName,
-        lastName,
-        age,
-        gender
-
-        
-    });
-    await student.save();
-    
-
-    res.send("user added");
-   }catch(err){
-    res.send("error"+err)
-   }
-
-})
-app.get("/profile",cookie,async (req,res)=>{
-   try{
-    
-    const email=req.body.emailId;
-    const user=await studentModal.find({emailId:email});
-    // console.log(user[0].emailId);
-    if(user[0].emailId!=email){
-        throw new Error("user not found");
-    }
-    res.send("your data:"+user);
-}catch(err){
-    res.status(400).send("erro"+err);
-}
-
-})
-app.delete("/profile",cookie,async (req,res)=>{
+app.delete("/profile",userAuth,async (req,res)=>{
 try{
     const id=req.body._id;
     if(!id){
@@ -105,7 +57,7 @@ res.send("user deleted successful");
 }
 
 })
-app.patch("/profile",cookie,async(req,res)=>{
+app.patch("/profile",userAuth,async(req,res)=>{
  try{
     
     const data=req.body._id;
@@ -131,36 +83,4 @@ app.patch("/profile",cookie,async(req,res)=>{
 
 })
 
-app.post("/login",async (req,res)=>{
-    try{
-        const {emailId,pasword}=req.body;
-      
-        if(emailId==null && pasword==null){
-            throw new Error("pls enter email and password");
 
-        }
-        const ispresent=await studentModal.findOne({emailId:emailId});
-        console.log(ispresent);
-        if(!ispresent){
-            throw new Error("pls signup first");
-        }
-        const checkPass=await bcrypt.compare(pasword,ispresent.pasword);//it returns true or false
-        if(!checkPass){
-            throw new Error("invalid password")
-        }
-//write the logic of token here 
-const token1=await jwt.sign({_id:ispresent.id},"passOfDibya")
-
-        const token="fukentokenlife";
-        res.cookie("token",token1);   //cookie should be sent at athe time of login not inteh time of signup .Remember.
-
-        res.send("login sucessfull");
-            
-        
-    }catch(err){
-        res.send("Error occured at login "+err);
-    }
-   
-
-
-});

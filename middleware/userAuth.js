@@ -7,29 +7,27 @@ const jwt=require("jsonwebtoken");
 
 // const cookie=require("cookie-parser");
 // app.use(cookieParser());
-async function cookie (req,res,next){
+async function userAuth (req,res,next){
     try{
         const cookies=req.cookies.token;
         // console.log(cookies);
 
         const decodeobj=await jwt.verify(cookies,"passOfDibya");         //it checks the token ,if the password is presnt in the token or not and if present then return a object ,in which objwct the hidden data set by us at time of creation the token(id) will present
-        console.log(decodeobj);
+        // console.log(decodeobj);
         const {_id}=decodeobj;
-        const user=studentModal.findById(_id);
+      
+        const user=await studentModal.findOne({_id});
+       
         if(!user){
             throw new Error("user not found");
         }
-
-
-        // if(cookies!="fukentokenlife"){
-        // throw new Error("pls login first");
-        // }
-
+         req.user=user; 
+    
         next();
     }catch(err){
-        res.send("pls login first"+err);
+        res.send("pls login first "+ err.message);
     }
 }
 
-module.exports=cookie;
+module.exports=userAuth;
 

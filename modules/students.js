@@ -10,13 +10,13 @@ const studentSchema=new mongoose.Schema({
  },
  emailId:{
     type:String,
-    required:true,
+   //  required:true,
     unique:true,
     trim:true
  },
- pasword:{
+ password:{
     type:String,
-    required:true
+   //  required:true
  },
  age:{
     type:Number
