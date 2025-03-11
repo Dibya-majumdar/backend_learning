@@ -4,6 +4,7 @@ const userAuth=require("../middleware/userAuth");
 const { studentModal } = require("../modules/students");
 const bcrypt = require('bcrypt');
 
+
 profileRouter.get("/profile/view", userAuth,  async(req,res)=>{
     try{
 
