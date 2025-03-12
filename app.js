@@ -13,6 +13,7 @@ const jwt=require("jsonwebtoken");
 const {authRouter}=require("./Routers/authRouter");
 const {profileRouter}=require("./Routers/profileRouter");
 const {connectionRouter}=require("./Routers/connectionRouter");
+const {userRouter}=require("./Routers/userRouter");
 
 
  app.use(cookieParser());
@@ -34,4 +35,5 @@ xyz();
 app.use("/",authRouter);
 app.use("/",profileRouter);
 app.use("/",connectionRouter);
+app.use("/",userRouter);
 

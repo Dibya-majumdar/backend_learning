@@ -57,7 +57,7 @@ authRouter.post("/signup",async (req,res)=>{
      try{
          const {emailId,password}=req.body;
          const keys=Object.keys(req.body);
-         console.log(keys);
+        
          if(!keys.includes("emailId") || !keys.includes("password")){
             throw new Error("enter pass and email")
          }
@@ -67,7 +67,7 @@ authRouter.post("/signup",async (req,res)=>{
  
          }
          const ispresent=await studentModal.findOne({emailId:emailId});
-         console.log(ispresent);
+        
          if(!ispresent){
              throw new Error("pls signup first");
          }
