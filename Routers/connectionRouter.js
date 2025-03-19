@@ -58,7 +58,7 @@ connectionRouter.post("/request/review/:status/:requestid",userAuth,async(req,re
 
 
 try{
-    const loginUserId=req.user._id;
+    const loginUserId=req.user._id;//login user id comes from the userAuth
     const {requestid,status}=req.params;
     const val=["accepted","rejected"];
     if(!val.includes(status)){

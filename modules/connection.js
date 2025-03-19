@@ -1,14 +1,17 @@
 const mongoose=require("mongoose");
+const {studentModal}=require("./students")
 
 const connectionSchema=new mongoose.Schema({
     fromUserId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
+        ref:studentModal //require studentModel first
        
     },
     toUserId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
+        ref:studentModal     //require studentModel first
       
     },
     status:{

@@ -78,7 +78,7 @@ authRouter.post("/signup",async (req,res)=>{
  //write the logic of token here 
  const token1=await jwt.sign({_id:ispresent.id},"passOfDibya")
  
-         const token="fukentokenlife";
+        //  const token="fukentokenlife";
          res.cookie("token",token1);   //cookie should be sent at athe time of login not inteh time of signup .Remember.
  
          res.send("login sucessfull");
