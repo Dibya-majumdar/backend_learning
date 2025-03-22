@@ -14,8 +14,11 @@ const {authRouter}=require("./Routers/authRouter");
 const {profileRouter}=require("./Routers/profileRouter");
 const {connectionRouter}=require("./Routers/connectionRouter");
 const {userRouter}=require("./Routers/userRouter");
-
-
+const cors=require("cors");//require cors
+app.use(cors({   //now only origin 5173 can acceess the api 
+    origin:"http://localhost:5173",
+    credentials:true
+}))
  app.use(cookieParser());
 async function xyz() {
     try {
