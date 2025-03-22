@@ -81,7 +81,10 @@ authRouter.post("/signup",async (req,res)=>{
         //  const token="fukentokenlife";
          res.cookie("token",token1);   //cookie should be sent at athe time of login not inteh time of signup .Remember.
  
-         res.send("login sucessfull");
+         res.json({
+            message:"login successful",
+            data:ispresent
+         });
              
          
      }catch(err){
