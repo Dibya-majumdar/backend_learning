@@ -30,11 +30,11 @@ profileRouter.patch("/profile/edit",userAuth,async (req,res)=>{
     try{
         const data=req.user._id;
         console.log(data)
-        const {firstName,lastName,age,password}=req.body;
+        const {firstName,lastName,age,password,photoUrl}=req.body;
         const gettingEmailFromBody=Object.keys(req.body);
-        console.log(gettingEmailFromBody)
+        
         if(gettingEmailFromBody.includes("emailId")){
-            console.log("hi")
+         
             throw new Error("can't update emailId")
 
         }
@@ -50,10 +50,11 @@ profileRouter.patch("/profile/edit",userAuth,async (req,res)=>{
             password:passwordHash,
             age,
             firstName,
-            lastName
+            lastName,
+            photoUrl
         }
         const updataData=await studentModal.findByIdAndUpdate(data,student);
-       console.log("op")
+     
         res.json({
             "message":"profile updated successfully!",
             

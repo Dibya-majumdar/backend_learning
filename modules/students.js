@@ -18,6 +18,10 @@ const studentSchema=new mongoose.Schema({
     type:String,
    //  required:true
  },
+ photoUrl:{
+type:String,
+trim:true
+ },
  age:{
     type:Number
  },
