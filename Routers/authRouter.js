@@ -44,9 +44,9 @@ authRouter.post("/signup",async (req,res)=>{
      await student.save();
      
  
-     res.send("user added");
+     res.json("user added");
     }catch(err){
-     res.send(err.message)
+     res.status(400).json(err.message)
     }
  
  });
@@ -88,7 +88,7 @@ authRouter.post("/signup",async (req,res)=>{
              
          
      }catch(err){
-         res.send(err.message);
+         res.status(400).json(err.message);
      }
     
  
