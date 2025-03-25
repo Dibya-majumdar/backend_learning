@@ -5,6 +5,8 @@ const { studentModal } = require("../modules/students");
 const bcrypt = require('bcrypt');
 
 
+
+
 profileRouter.get("/profile/view", userAuth,  async(req,res)=>{
     try{
 
@@ -17,12 +19,12 @@ profileRouter.get("/profile/view", userAuth,  async(req,res)=>{
     res.json({
         "messege":"your profile----",
         // findUserById
-        userId
+        data:findUserById
     })
     
 
 }catch(err){
-    res.json({"error":`${err.messege}`})
+    res.status(400).json({"error":`${err.messege}`})
 }
 
 })
@@ -30,7 +32,7 @@ profileRouter.patch("/profile/edit",userAuth,async (req,res)=>{
     try{
         const data=req.user._id;
         console.log(data)
-        const {firstName,lastName,age,password,photoUrl}=req.body;
+        const {firstName,lastName,age,password,photoUrl,about,gender}=req.body;
         const gettingEmailFromBody=Object.keys(req.body);
         
         if(gettingEmailFromBody.includes("emailId")){
@@ -43,25 +45,36 @@ profileRouter.patch("/profile/edit",userAuth,async (req,res)=>{
             if(finStu==null){
                 throw new Error("sudent does not exist");
             }
+            let passwordHash = null;
+            if(password!=null){
+                 passwordHash= await bcrypt.hash(password,10);
+            }
+       
 
-        const passwordHash= await bcrypt.hash(password,10);
-
-        const student= {       //don't use new studentModel .just because of thsi small error i have wasted more thean 3 hours .
+       const student =password !=null ?(  {       //don't use new studentModel .just because of thsi small error i have wasted more thean 3 hours .
             password:passwordHash,
             age,
             firstName,
             lastName,
-            photoUrl
-        }
-        const updataData=await studentModal.findByIdAndUpdate(data,student);
+            photoUrl,
+            about,
+            gender                        
+        }):({  age,
+            firstName,
+            lastName,
+            photoUrl,
+            about,
+            gender                       
+        })
+        const updataData=await studentModal.findByIdAndUpdate(data,student, { new: true });//findByIdAndUpdate -> it does not return new updated data.it return teh previos data .so we have to add {new:true } for getting the actual current updated data.
      
         res.json({
             "message":"profile updated successfully!",
-            
+            data:updataData
         })
 
     }catch(err){
-        res.send("error accured  "+err.messege);
+        res.status(400).send("error accured  "+err.messege);
     }
 })
 

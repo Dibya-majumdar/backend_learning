@@ -27,6 +27,9 @@ trim:true
  },
  gender:{
     type:String
+ },
+ about:{
+   type:String
  }
 },{timestamps:true});
 

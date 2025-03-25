@@ -12,7 +12,7 @@ const authRouter=express.Router();
 
 authRouter.post("/signup",async (req,res)=>{
     try{ 
-     const {emailId,password,firstName,lastName,age,gender,photoUrl}=req.body;
+     const {emailId,password,firstName,lastName,age,gender,photoUrl,about}=req.body;
      const keys=Object.keys(req.body);
      if (!keys.includes("emailId") || !keys.includes("password") || !keys.includes("firstName")) { 
         throw new Error("Fill the credentials");
@@ -38,7 +38,8 @@ authRouter.post("/signup",async (req,res)=>{
          lastName,
          age,
          gender,
-         photoUrl
+         photoUrl,
+         about
  
          
      });

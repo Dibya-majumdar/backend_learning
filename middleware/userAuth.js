@@ -25,7 +25,7 @@ async function userAuth (req,res,next){
     
         next();
     }catch(err){
-        res.send("pls login first "+ err.message);
+        res.status(400).send("pls login first "+ err.message);
     }
 }
 
