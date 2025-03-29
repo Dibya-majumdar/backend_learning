@@ -42,7 +42,7 @@ connectionRouter.post(
       await connect.save();
       res.json({
         message: "requsested send or store successfully in database",
-        connect,
+        data:connect,
       });
     } catch (err) {
       res.json({
@@ -78,7 +78,7 @@ try{
     const acceptData=await checkingReqId.save();
     res.json({
         "message":`request ${status} successfully`,
-        acceptData
+        data:acceptData
     })
 }catch(err){
     res.json({"message":err.message});

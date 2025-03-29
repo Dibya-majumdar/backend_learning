@@ -14,14 +14,18 @@ userRouter.get("/user/request",userAuth,async(req,res)=>{
         const checkingData=await connectionModel.find({
             toUserId:new mongoose.Types.ObjectId(loginUserId),
             status:"interested"
-        }).populate("fromUserId",["firstName","lastName","-_id"]);  //so bydefault _id comes in mongodb alsways .to remove that we can use "-" before the field we want to exclude
-        if(checkingData.length==0){
+        }).populate("fromUserId",["firstName","lastName","about"," gender","photoUrl","age","-_id"]);  //so bydefault _id comes in mongodb alsways .to remove that we can use "-" before the field we want to exclude
+        const onlyfromUserData = checkingData.map((connection) => connection.fromUserId);
+        if(checkingData.length===0){
             res.json({"message":"No request comes!"})
-        }
+        }else{
             res.json({
-            "message":"your conncetion requests",
-            checkingData
-         })
+                "message":"your conncetion requests",
+                  "data":onlyfromUserData
+               
+            })
+        }
+        
     }catch(err){
             res.json({"message":err.message})
     }
@@ -42,22 +46,23 @@ try{
         status:"accepted",
     }).populate("fromUserId",["firstName","lastName","age"]).populate("toUserId",["firstName","lastName","age"]);
    
-    console.log(findingData); //GOT THE TABLE
+    // console.log(findingData); 
     if(findingData.length==0){
         throw new Error("make connections ...!")
     }
     const data=findingData.map((row)=>{
-        if(row.fromUserId==loginUserId){
-            return row.toUserId;
+       
+        if(row.fromUserId._id.toString()===loginUserId.toString()){   //if i am not convert id to string then it does not matches the id
+            return row.toUserId._id;
         }else{
-            return row.fromUserId;
+            return row.fromUserId._id;
         }
        
     });
+    // console.log("data",data);
 
-    const checkUserTable=await studentModal.find({_id:data}).select("firstName lastName age -_id");
-    console.log(checkUserTable)
-    if(checkUserTable.length==0){
+    const checkUserTable=await studentModal.find({_id:data}).select("firstName lastName age about gender photoUrl -_id");
+   if(checkUserTable.length==0){
         throw new Error("data not found");
     }
 
@@ -83,6 +88,11 @@ userRouter.get("/user/feed",userAuth,async(req,res)=>{
     try{
 
         const loginUserId=req.user._id;
+        const page=parseInt(req.query.page)|| 1;  //check the url->localhost:3000/user/feed?page=2&limit=1 .do not give space .just because space i waste so many time to finout my error.
+        let limit=parseInt(req.query.limit) ||10;
+        const skip=(page-1)*limit;
+        limit =limit>50? 50 :limit;
+
     const feedData=await connectionModel.find({
         $or:[
             {fromUserId:loginUserId},{toUserId:loginUserId}
@@ -99,13 +109,15 @@ userRouter.get("/user/feed",userAuth,async(req,res)=>{
             {_id:{$nin:Array.from(hideUsersFromFeed)}},//notIn -> $nin:["val1","val2",....etc] .array must be there
             {_id:{$ne:loginUserId}}//not equal. -> $ne:anyValue
         ]
-    }).select("firstName lastName age -_id ");
+    }).select("firstName lastName age about photoUrl gender -_id ")
+    .skip(skip)
+    .limit(limit);
     res.json(feedUsers);
 
 
     }catch(err){
         res.json({
-            "message":err.message
+            "error":err.message
         })
     }
     
