@@ -1,4 +1,5 @@
 const { error } = require("console");
+const http=require("http");
 
 const express=require("express");
 const app=express();
@@ -15,6 +16,7 @@ const {profileRouter}=require("./Routers/profileRouter");
 const {connectionRouter}=require("./Routers/connectionRouter");
 const {userRouter}=require("./Routers/userRouter");
 const cors=require("cors");//require cors
+const initializeSocket = require("./webSockets/socket");
 app.use(cors({   //now only origin 5173 can acceess the api 
     origin:"http://localhost:5173",
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
@@ -33,10 +35,20 @@ app.options("*", (req, res) => {
 
 
  app.use(cookieParser());
+
+ app.use("/",authRouter);
+app.use("/",profileRouter);
+app.use("/",connectionRouter);
+app.use("/",userRouter);
+
+const server=http.createServer(app);
+initializeSocket(server);
+
+
 async function xyz() {
     try {
         await connectDB();
-        app.listen(3000, () => {
+        server.listen(3000, () => {
             console.log("Listening on port 3000");
         });
     } catch (err) {
@@ -48,8 +60,8 @@ async function xyz() {
 
 xyz();
 
-app.use("/",authRouter);
-app.use("/",profileRouter);
-app.use("/",connectionRouter);
-app.use("/",userRouter);
+// app.use("/",authRouter);
+// app.use("/",profileRouter);
+// app.use("/",connectionRouter);
+// app.use("/",userRouter);
 
