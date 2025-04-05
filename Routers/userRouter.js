@@ -14,7 +14,7 @@ userRouter.get("/user/request",userAuth,async(req,res)=>{
         const checkingData=await connectionModel.find({
             toUserId:new mongoose.Types.ObjectId(loginUserId),
             status:"interested"
-        }).populate("fromUserId",["firstName","lastName","about"," gender","photoUrl","age","-_id"]);  //so bydefault _id comes in mongodb alsways .to remove that we can use "-" before the field we want to exclude
+        }).populate("fromUserId",["firstName","lastName","about"," gender","photoUrl","age","_id"]);  //so bydefault _id comes in mongodb alsways .to remove that we can use "-" before the field we want to exclude(at first i wrote -_id but in frontend it is required so i remove "-" sign from _id so now id comes as key value)
         const onlyfromUserData = checkingData.map((connection) => connection.fromUserId);
         if(checkingData.length===0){
             res.json({"message":"No request comes!"})
@@ -61,7 +61,7 @@ try{
     });
     // console.log("data",data);
 
-    const checkUserTable=await studentModal.find({_id:data}).select("firstName lastName age about gender photoUrl -_id");
+    const checkUserTable=await studentModal.find({_id:data}).select("firstName lastName age about gender photoUrl _id");
    if(checkUserTable.length==0){
         throw new Error("data not found");
     }
@@ -109,7 +109,7 @@ userRouter.get("/user/feed",userAuth,async(req,res)=>{
             {_id:{$nin:Array.from(hideUsersFromFeed)}},//notIn -> $nin:["val1","val2",....etc] .array must be there
             {_id:{$ne:loginUserId}}//not equal. -> $ne:anyValue
         ]
-    }).select("firstName lastName age about photoUrl gender -_id ")
+    }).select("firstName lastName age about photoUrl gender _id ")
     .skip(skip)
     .limit(limit);
     res.json(feedUsers);
