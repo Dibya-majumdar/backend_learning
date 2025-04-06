@@ -1,4 +1,5 @@
 const express=require("express");
+const validator=require("validator");
 const bcrypt = require('bcrypt');
 
 const {studentModal}=require("../modules/students");
@@ -21,6 +22,10 @@ authRouter.post("/signup",async (req,res)=>{
          throw new Error("All fields are required");
      }
 
+     const validateGmail=validator.isEmail(emailId);
+     if(validateGmail===false) {
+        throw new Error("Incorrect Email")
+     }
      const findEmail=await studentModal.findOne({emailId:emailId});
     //  console.log(findEmail);
       if(findEmail != null){
