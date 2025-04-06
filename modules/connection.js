@@ -11,7 +11,7 @@ const connectionSchema=new mongoose.Schema({
     toUserId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
-        ref:studentModal     //require studentModel first
+        ref:studentModal    //require studentModel first
       
     },
     status:{

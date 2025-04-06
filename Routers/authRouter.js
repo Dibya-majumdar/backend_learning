@@ -1,6 +1,6 @@
 const express=require("express");
 const bcrypt = require('bcrypt');
-require("../modules/students")
+
 const {studentModal}=require("../modules/students");
 
 const jwt=require("jsonwebtoken");
