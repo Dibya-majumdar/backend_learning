@@ -34,7 +34,7 @@ app.options("*", (req, res) => {
     res.sendStatus(204); // Respond with no content for preflight
 });
 
-
+require('dotenv').config();            //configurre .env
 
  app.use(cookieParser());
 
@@ -51,7 +51,7 @@ initializeSocket(server);
 async function xyz() {
     try {
         await connectDB();
-        server.listen(3000, () => {
+        server.listen(process.env.Port_No, () => {
             console.log("Listening on port 3000");
         });
     } catch (err) {

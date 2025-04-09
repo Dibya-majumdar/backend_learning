@@ -83,7 +83,7 @@ authRouter.post("/signup",async (req,res)=>{
              throw new Error("invalid password")
          }
  //write the logic of token here 
- const token1=await jwt.sign({_id:ispresent.id},"passOfDibya")
+ const token1=await jwt.sign({_id:ispresent.id},process.env.Jwt_password)  //change hardCoded to env
  
         //  const token="fukentokenlife";
          res.cookie("token",token1);   //cookie should be sent at athe time of login not inteh time of signup .Remember.

@@ -13,7 +13,7 @@ const initializeSocket=(server)=>{
         socket.on("joinChat",({userId,targetUserId})=>{         //so this event will run when the user call this event joincaht
             const roomId=[userId,targetUserId].sort().join("_");
             socket.join(roomId);
-            console.log("room id is:" ,roomId);
+            // console.log("room id is:" ,roomId);
          })      
         socket.on("sendMessage",async({firstName,userId,targetUserId,text})=>{
             const roomId=[userId,targetUserId].sort().join("_");
