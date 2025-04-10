@@ -30,6 +30,10 @@ trim:true
  },
  about:{
    type:String
+ },
+ adminKey:{
+   type:String,
+   trim:true,
  }
 },{timestamps:true});
 

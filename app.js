@@ -18,6 +18,7 @@ const {userRouter}=require("./Routers/userRouter");
 const cors=require("cors");//require cors
 const initializeSocket = require("./webSockets/socket");
 const { chatRouter } = require("./Routers/chatRouter");
+const { adminRouter } = require("./Routers/adminRouter");
 
 app.use(cors({   //now only origin 5173 can acceess the api 
     origin:"http://localhost:5173",
@@ -43,6 +44,7 @@ app.use("/",profileRouter);
 app.use("/",connectionRouter);
 app.use("/",userRouter);
 app.use("/",chatRouter);
+app.use("/",adminRouter);
 
 const server=http.createServer(app);
 initializeSocket(server);

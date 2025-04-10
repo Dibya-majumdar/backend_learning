@@ -66,7 +66,7 @@ profileRouter.patch("/profile/edit",userAuth,async (req,res)=>{
             about,
             gender                       
         })
-        const updataData=await studentModal.findByIdAndUpdate(data,student, { new: true });//findByIdAndUpdate -> it does not return new updated data.it return teh previos data .so we have to add {new:true } for getting the actual current updated data.
+        const updataData=await studentModal.findByIdAndUpdate(data,student, { new: true });//findByIdAndUpdate -> it does not return new updated data.it return the previos data .so we have to add {new:true } for getting the actual current updated data.
      
         res.json({
             "message":"profile updated successfully!",

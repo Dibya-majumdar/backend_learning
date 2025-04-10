@@ -12,7 +12,7 @@ async function userAuth (req,res,next){
         const cookies=req.cookies.token;
         // console.log(cookies);
 
-        const decodeobj=await jwt.verify(cookies,"passOfDibya");         //it checks the token ,if the password is presnt in the token or not and if present then return a object ,in which objwct the hidden data set by us at time of creation the token(id) will present
+        const decodeobj=await jwt.verify(cookies,process.env.Jwt_password);         //it checks the token ,if the password is presnt in the token or not and if present then return a object ,in which objwct the hidden data set by us at time of creation the token(id) will present
         // console.log(decodeobj);
         const {_id}=decodeobj;
       
