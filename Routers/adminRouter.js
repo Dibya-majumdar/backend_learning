@@ -20,6 +20,7 @@ if(adminKey != process.env.Admin_Key){
     throw new Error("Admin verification fails");
 }
 const ispresent=await studentModal.findOne({emailId:emailId})
+console.log(ispresent)
 if(!ispresent){
     throw new Error("pls signup first");
 }
@@ -46,12 +47,12 @@ res.json({
 adminRouter.post("/Admin/message",userAuth,async(req,res)=>{
     try{
         const sender=req.user;
-        const {messages,emailId}=req.body;
-        console.log(messages,emailId);
+        const {messages,emailId,Name}=req.body;
+        // console.log(messages,emailId,Name);
         if(!emailId){
             throw new Error("pls add email address of this login account")
         }
-        console.log(sender.emailId);
+        // console.log(sender.emailId);
 
         const isEmail=await studentModal.findOne({emailId:sender.emailId});
         if(!isEmail){
@@ -69,6 +70,7 @@ adminRouter.post("/Admin/message",userAuth,async(req,res)=>{
 
         if (existingMessage) {
           // Push to messages array
+          existingMessage.Name=Name,
           existingMessage.messages.push({ text: messages });
           await existingMessage.save();   //you have to call .save() after using .push() on a Mongoose document because .push() only updates the in-memory object, not the database.
     
@@ -77,6 +79,7 @@ adminRouter.post("/Admin/message",userAuth,async(req,res)=>{
           // Create new document
           const newMessage = new AdminMessageModel({
             emailId,
+            Name,
             messages: [{ text: messages }]
           });
     

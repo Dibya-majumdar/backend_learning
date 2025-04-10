@@ -16,6 +16,10 @@ const adminMessage=mongoose.Schema({
         unique:true
        
     },
+    Name:{
+        type:String,
+        required:true
+    },
     messages:[messageSchema]
    
 },{timestamps:true});
