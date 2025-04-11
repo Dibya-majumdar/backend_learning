@@ -10,5 +10,16 @@
     "nodemon": "^3.1.9",
     "socket.io": "^4.8.1",
     "validator": "^13.15.0"
-  }
+  },
+  "name": "backend_learning",
+  "version": "1.0.0",
+  "description": "to run the application type->  nodemon app.js . but type in cmd not powershell. it is showing error that \"cant write script in powrshell \"\r 1.findByIdAndUpdate -> it does not return new updated data.it return the previos data .so we have to add {new:true } for getting the actual current updated data.",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":"nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC"
 }
