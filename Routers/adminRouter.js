@@ -28,7 +28,7 @@ const pass= await bcrypt.compare(password,ispresent.password);
 if(!pass){
     throw new Error("invalid credentials");
 }
-const token=await jwt.sign({_id:ispresent.id},process.env.Jwt_password) ;
+const token=jwt.sign({_id:ispresent.id},process.env.Jwt_password,{expiresIn:"7d"}) ;
 res.cookie("token",token);
 
 res.json({
@@ -49,6 +49,9 @@ adminRouter.post("/Admin/message",userAuth,async(req,res)=>{
         const sender=req.user;
         const {messages,emailId,Name}=req.body;
         // console.log(messages,emailId,Name);
+        if(!Name){
+            throw new Error("Enter your name")
+        }
         if(!emailId){
             throw new Error("pls add email address of this login account")
         }
@@ -58,7 +61,9 @@ adminRouter.post("/Admin/message",userAuth,async(req,res)=>{
         if(!isEmail){
             throw new Error("email is not present")
         }
-       
+       if(sender.emailId != emailId) {
+        throw new Error("invalid credentials pls write the gmail whom through you login")
+       }
         const isPresent=await studentModal.findOne({_id:sender._id});
         if(!isPresent){
             throw new Error("user not authenticated")
@@ -87,7 +92,7 @@ adminRouter.post("/Admin/message",userAuth,async(req,res)=>{
           res.json({ message: "New message record created" });
         }
     }catch(err){
-        console.log(err.message)
+        res.status(400).json(err.message);
     }
 })
 
@@ -96,7 +101,7 @@ adminRouter.get("/admin/message",userAuth,async(req,res)=>{
         const messages=await AdminMessageModel.find({});
         res.send(messages);
     }catch(err){
-        console.log(err.message)
+        res.status(400).json(err.message);
     }
 })
 

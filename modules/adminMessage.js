@@ -1,5 +1,6 @@
 const mongoose=require("mongoose");
 const { studentModal } = require("./students");
+const { trim } = require("validator");
 
 
 const messageSchema = mongoose.Schema({
@@ -13,7 +14,8 @@ const adminMessage=mongoose.Schema({
     emailId:{
         type:String,
         required:true,
-        unique:true
+        unique:true,
+        trim:true
        
     },
     Name:{
