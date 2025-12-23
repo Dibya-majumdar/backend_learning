@@ -22,7 +22,7 @@ const { adminRouter } = require("./Routers/adminRouter");
 
 app.use(cors({   //now only origin 5173 can acceess the api 
     // origin:"http://localhost:5173",
-    origin:"https://charming-fairy-57cd31.netlify.app/",
+    origin:"https://charming-fairy-57cd31.netlify.app",
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
    credentials:true,
    allowedHeaders: ["Content-Type", "Authorization"], 
