@@ -86,8 +86,13 @@ authRouter.post("/signup",async (req,res)=>{
  const token1=jwt.sign({_id:ispresent.id},process.env.Jwt_password,{expiresIn:"7d"})  //change hardCoded to env
  
         //  const token="fukentokenlife";
-         res.cookie("token",token1);   //cookie should be sent at athe time of login not inteh time of signup .Remember.
- 
+        // res.cookie("token",token1);   //cookie should be sent at athe time of login not inteh time of signup .Remember.   //shows error cookie not sent in https .......so follow down approach
+ res.cookie("token", token1, {   
+  httpOnly: true,
+  secure: true,        // HTTPS only
+  sameSite: "none",    // 🔥 override browser default
+  path: "/",
+});
          res.json({
             message:"login successful",
             data:ispresent
