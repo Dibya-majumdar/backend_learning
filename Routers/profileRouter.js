@@ -10,7 +10,8 @@ const bcrypt = require('bcrypt');
 profileRouter.get("/profile/view", userAuth,  async(req,res)=>{
     try{
 
-   
+ 
+
   const userId=req.user;
     const findUserById=await studentModal.findOne({_id:userId._id});
     if(findUserById==null){

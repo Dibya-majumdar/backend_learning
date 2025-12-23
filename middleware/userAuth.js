@@ -9,6 +9,8 @@ const jwt=require("jsonwebtoken");
 // app.use(cookieParser());
 async function userAuth (req,res,next){
     try{
+         
+console.log("Token:", req.cookies?.token);
         const cookies=req.cookies.token;
         // console.log(cookies);
 
